@@ -1,0 +1,42 @@
+{% extends 'app/base.html' %}
+{% block title %}Список анкет{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Анкеты</h2>
+<p class="text-muted">Тут сохраняются все анкеты, которые были просканированы</p>
+
+<div class="table-responsive mt-4">
+  <table class="table table-bordered align-middle">
+    <thead class="table-light">
+      <tr>
+        <th>№</th>
+        <th>Название</th>
+        <th>Дата загрузки</th>
+        <th class="text-center">Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for candidate in candidates %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ candidate.filename }}</td>
+        <td>{{ candidate.uploaded_at|date:"d.m.Y" }}</td>
+        <td class="text-center">
+          <a href="{% url 'edit' candidate.id %}" class="btn btn-sm btn-outline-primary">
+            ✏️
+          </a>
+          <form action="{% url 'delete' candidate.id %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-outline-danger">🗑️</button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4" class="text-center">Нет загруженных анкет</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

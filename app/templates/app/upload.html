@@ -1,0 +1,17 @@
+{% extends 'app/base.html' %}
+{% block title %}Загрузка анкет{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2 class="mb-4">Загрузка анкет</h2>
+  <p class="mb-3">Выберите анкету и загрузите её в формате PDF/DOCX. Вы можете загрузить сразу до 50 анкет.</p>
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+      <input type="file" name="files" class="form-control" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+    </div>
+    <button type="submit" class="btn-upload">Загрузить анкету</button>
+  </form>
+</div>
+{% endblock %}

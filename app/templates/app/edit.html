@@ -1,0 +1,147 @@
+{% extends 'app/base.html' %}
+{% block title %}Редактирование анкеты{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Редактирование анкеты</h2>
+<form method="post">
+  {% csrf_token %}
+
+  <!-- 1. Общие сведения -->
+  <h4>1. Общие сведения</h4>
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label class="form-label">ФИО</label>
+      <input name="full_name" class="form-control" value="{{ candidate.full_name }}">
+    </div>
+    <div class="col-md-3 mb-3">
+      <label class="form-label">Дата рождения</label>
+      <input name="birth_date" type="date" class="form-control" value="{{ candidate.birth_date|date:'Y-m-d' }}">
+    </div>
+    <div class="col-md-3 mb-3">
+      <label class="form-label">Место рождения</label>
+      <input name="birth_place" class="form-control" value="{{ candidate.birth_place }}">
+    </div>
+    <div class="col-md-6 mb-3">
+      <label class="form-label">Гражданство</label>
+      <input name="citizenship" class="form-control" value="{{ candidate.citizenship }}">
+    </div>
+    <div class="col-md-6 mb-3">
+      <label class="form-label">ИИН</label>
+      <input name="iin" class="form-control" value="{{ candidate.iin }}">
+    </div>
+  </div>
+
+  <!-- 2. Образование -->
+  <h4 class="mt-4">2. Образование</h4>
+  <div class="table-responsive">
+    <table class="table table-bordered align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Уч. заведение</th>
+          <th>Период</th>
+          <th>Специальность</th>
+          <th>Диплом</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for edu in candidate.education.all %}
+        <tr>
+          <td><input name="education_{{ forloop.counter0 }}_institution" class="form-control" value="{{ edu.institution }}"></td>
+          <td><input name="education_{{ forloop.counter0 }}_period" class="form-control" value="{{ edu.period }}"></td>
+          <td><input name="education_{{ forloop.counter0 }}_specialization" class="form-control" value="{{ edu.specialization }}"></td>
+          <td><input name="education_{{ forloop.counter0 }}_diploma" class="form-control" value="{{ edu.diploma }}"></td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td><input name="education_0_institution" class="form-control"></td>
+          <td><input name="education_0_period" class="form-control"></td>
+          <td><input name="education_0_specialization" class="form-control"></td>
+          <td><input name="education_0_diploma" class="form-control"></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 3. Родственники -->
+  <h4 class="mt-4">3. Родственники</h4>
+  <div class="table-responsive">
+    <table class="table table-bordered align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>ФИО</th>
+          <th>Год рождения</th>
+          <th>Связь</th>
+          <th>Место работы</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for rel in candidate.relatives.all %}
+        <tr>
+          <td><input name="relative_{{ forloop.counter0 }}_full_name" class="form-control" value="{{ rel.full_name }}"></td>
+          <td><input name="relative_{{ forloop.counter0 }}_birth_date" type="date" class="form-control" value="{{ rel.birth_date }}"></td>
+          <td><input name="relative_{{ forloop.counter0 }}_relation" class="form-control" value="{{ rel.relation }}"></td>
+          <td><input name="relative_{{ forloop.counter0 }}_job" class="form-control" value="{{ rel.job }}"></td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td><input name="relative_0_full_name" class="form-control"></td>
+          <td><input name="relative_0_birth_date" type="date" class="form-control"></td>
+          <td><input name="relative_0_relation" class="form-control"></td>
+          <td><input name="relative_0_job" class="form-control"></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 4. Трудовая деятельность -->
+  <h4 class="mt-4">4. Трудовая деятельность</h4>
+  <div class="table-responsive">
+    <table class="table table-bordered align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Период</th>
+          <th>Место работы</th>
+          <th>Должность</th>
+          <th>Взыскания</th>
+          <th>Причина увольнения</th>
+          <th>Иные сведения</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for job in candidate.work_experience.all %}
+        <tr>
+          <td>
+            <input name="work_{{ forloop.counter0 }}_start" type="date" class="form-control" value="{{ job.start_date }}">
+            <input name="work_{{ forloop.counter0 }}_end" type="date" class="form-control mt-1" value="{{ job.end_date }}">
+          </td>
+          <td><input name="work_{{ forloop.counter0 }}_org" class="form-control" value="{{ job.organization }}"></td>
+          <td><input name="work_{{ forloop.counter0 }}_position" class="form-control" value="{{ job.position }}"></td>
+          <td><input name="work_{{ forloop.counter0 }}_disciplinary" class="form-control" value="{{ job.disciplinary }}"></td>
+          <td><input name="work_{{ forloop.counter0 }}_reason" class="form-control" value="{{ job.reason }}"></td>
+          <td><input name="work_{{ forloop.counter0 }}_notes" class="form-control" value="{{ job.notes }}"></td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td>
+            <input name="work_0_start" type="date" class="form-control">
+            <input name="work_0_end" type="date" class="form-control mt-1">
+          </td>
+          <td><input name="work_0_org" class="form-control"></td>
+          <td><input name="work_0_position" class="form-control"></td>
+          <td><input name="work_0_disciplinary" class="form-control"></td>
+          <td><input name="work_0_reason" class="form-control"></td>
+          <td><input name="work_0_notes" class="form-control"></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-4">
+    <button type="submit" class="btn btn-success">Сохранить анкету</button>
+    <a href="{% url 'list' %}" class="btn btn-secondary">Назад</a>
+  </div>
+</form>
+{% endblock %}
